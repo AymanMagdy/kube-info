@@ -1,14 +1,34 @@
-// TODO tomorrow:
-// Organise the files with the desired needed function for every compnent.
-// And finish the task of getting the clusters.
+// TODO: Write the controlleres for all the services.
 
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
+
+	"./controller"
+	router "./http"
+	"./services"
 )
 
+var (
+	clusterRepository 	repository.clusterRepository = nil
+	clusterService 		services.clusterService 	 = services.NewClusterService(clusterRepository)
+	clusterController 	controller.clusterController = controller.clusterController(clusterService)
+	httpRouter      	router.Router             	 = router.NewMuxRouter()
+)
+
+func main() {
+	const port string = ":8000"
+
+	httpRouter.GET("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Server is up and running...")
+	})
+
+	httpRouter.GET("/api/clusters", clusterController.GetClusters)
+
+	httpRouter.SERVE(port)
+}
 
 type namespace struct{}
 
@@ -132,16 +152,16 @@ func (c *pod) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func main() {
-	namespaceObj := &namespace{}
-	clusterObj := &cluster{}
-	nodeObj := &node{}
-	podObj := &pod{}
+// func main() {
+// 	namespaceObj := &namespace{}
+// 	clusterObj := &cluster{}
+// 	nodeObj := &node{}
+// 	podObj := &pod{}
 
-	http.Handle("/namespaces", namespaceObj)
-	http.Handle("/clusters", clusterObj)
-	http.Handle("/nodes", nodeObj)
-	http.Handle("/pods", podObj)
+// 	http.Handle("/namespaces", namespaceObj)
+// 	http.Handle("/clusters", clusterObj)
+// 	http.Handle("/nodes", nodeObj)
+// 	http.Handle("/pods", podObj)
 
-    log.Fatal(http.ListenAndServe(":8000", nil))
-}
+//     log.Fatal(http.ListenAndServe(":8000", nil))
+// }

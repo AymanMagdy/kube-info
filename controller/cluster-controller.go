@@ -14,5 +14,4 @@ var clusterService service.ClusterService
 
 type clusterController interface {
 	GetClusters(response http.ResponseWriter, request *http.Request)
-	
 }

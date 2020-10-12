@@ -13,15 +13,15 @@ type ClusterService interface {
 
 type ClusterServiceObj struct{}
 
-var ClusterRepo repository.ClusterRepositiory
+var ClusterRepo repository.ClusterRepository
 
-func NewClusterService(repository repository.ClusterRepositiory) ClusterService {
+func NewClusterService(repository repository.ClusterRepositiory) ClusterServiceObj {
 	ClusterRepo = repository
-	return &service{}
+	return &ClusterRepo{}
 }
 
 func (*ClusterServiceObj) Validate(video *entity.Cluster) error {
-	if cluster == nil{
+	if ClusterRepo == nil{
 		err := errors.New("No nodes in the cluster..")
 		return err
 	}
